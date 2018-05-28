@@ -21,3 +21,4 @@ Your sending email address must have a valid key pair on this server.
         $message->setBody($emailBody, 'text/html');
         $message->send();
 ```
+Inspired by: https://github.com/Mailgarant/switfmailer-openpgp
