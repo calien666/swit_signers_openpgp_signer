@@ -1,4 +1,4 @@
-# swit_signers_openpgp_signer
+# swift_signers_openpgp_signer
 ## OpenPGP Signer for TYPO3
 
 Just bind into your TYPO3 extension and change VENDOR and MyExtension to your namespace.
