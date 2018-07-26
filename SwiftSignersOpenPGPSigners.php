@@ -1,5 +1,6 @@
 <?php
 namespace VENDOR\MyExtension\Helper;
+
 /*
  * This file is part of SwiftMailer.
  * (c) 2004-2009 Chris Corbyn
@@ -165,9 +166,10 @@ class SwiftSignersOpenPGPSigner implements \Swift_Signers_BodySigner
      * @param string $keyFingerprint
      * @throws \Swift_SwiftException
      */
-    public function addRecipient($identifier,$keyFingerprint = null) {
+    public function addRecipient($identifier, $keyFingerprint = null)
+    {
         if (!$keyFingerprint) {
-            $keyFingerprint = $this->getKey($identifier,'encrypt');
+            $keyFingerprint = $this->getKey($identifier, 'encrypt');
         }
 
         $this->recipientKeys[$identifier] = $keyFingerprint;
@@ -200,9 +202,8 @@ class SwiftSignersOpenPGPSigner implements \Swift_Signers_BodySigner
         ));
 
         if (!$this->signingKey) {
-            foreach ($message->getFrom() as $key => $value)
-            {
-                $this->addSignature($this->getKey($key,'sign'));
+            foreach ($message->getFrom() as $key => $value) {
+                $this->addSignature($this->getKey($key, 'sign'));
             }
         }
 
@@ -212,16 +213,16 @@ class SwiftSignersOpenPGPSigner implements \Swift_Signers_BodySigner
 
         $signedBody = $originalMessage->toString();
 
-        $lines = preg_split('/(\r\n|\r|\n)/',rtrim($signedBody));
+        $lines = preg_split('/(\r\n|\r|\n)/', rtrim($signedBody));
 
         for ($i=0; $i<count($lines); $i++) {
             $lines[$i] = rtrim($lines[$i])."\r\n";
         }
 
         // Remove excess trailing newlines (RFC3156 section 5.4)
-        $signedBody = rtrim(implode('',$lines))."\r\n";
+        $signedBody = rtrim(implode('', $lines))."\r\n";
 
-        $signature = $this->pgpSignString($signedBody,$this->signingKey);
+        $signature = $this->pgpSignString($signedBody, $this->signingKey);
 
         //Swiftmailer is automatically changing content type and this is the hack to prevent it
         $body = <<<EOT
@@ -243,8 +244,7 @@ EOT;
         $message->setBody($body);
 
         if ($this->encrypt) {
-
-            $signed = sprintf("%s\r\n%s",$message->getHeaders()->get('Content-Type')->toString(),$body);
+            $signed = sprintf("%s\r\n%s", $message->getHeaders()->get('Content-Type')->toString(), $body);
 
             if (!$this->recipientKeys) {
                 foreach ($message->getTo() as $key => $value) {
@@ -259,7 +259,7 @@ EOT;
             }
 
             //Create body from signed message
-            $encryptedBody = $this->pgpEncryptString($signed,array_keys($this->recipientKeys));
+            $encryptedBody = $this->pgpEncryptString($signed, array_keys($this->recipientKeys));
 
             $type = $message->getHeaders()->get('Content-Type');
 
@@ -404,7 +404,6 @@ EOT;
      */
     protected function pgpEncryptString($plaintext, $keyFingerprints)
     {
-
         $this->gnupg->clearencryptkeys();
 
         foreach ($keyFingerprints as $keyFingerprint) {
